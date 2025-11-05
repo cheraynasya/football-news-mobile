@@ -58,7 +58,7 @@ class LeftDrawer extends StatelessWidget {
             title: const Text('Add News'),
             onTap: () {
               // Routing ke NewsFormPage
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const NewsFormPage(),

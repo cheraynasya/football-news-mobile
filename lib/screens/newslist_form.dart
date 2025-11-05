@@ -37,6 +37,13 @@ class _NewsFormPageState extends State<NewsFormPage> {
             ),
             backgroundColor: Colors.indigo,
             foregroundColor: Colors.white,
+
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
           // Tambahkan drawer
           drawer: const LeftDrawer(),
@@ -193,13 +200,13 @@ class _NewsFormPageState extends State<NewsFormPage> {
                                       child: const Text('OK'),
                                       onPressed: () {
                                         Navigator.pop(context);
+                                        _formKey.currentState!.reset();
                                       },
                                     ),
                                   ],
                                 );
                               },
                             );
-                            _formKey.currentState!.reset();
                           }
                         },
                         child: const Text(
