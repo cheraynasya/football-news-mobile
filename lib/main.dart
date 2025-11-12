@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
     return Provider(
       create: (_) {
         CookieRequest request = CookieRequest();
-        // BARIS request.baseUrl = "http://localhost:8000"; SUDAH DIHAPUS
         return request;
       },
       child: MaterialApp(

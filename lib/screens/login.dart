@@ -97,9 +97,6 @@ class _LoginPageState extends State<LoginPage> {
                       String username = _usernameController.text;
                       String password = _passwordController.text;
 
-                      // Check credentials
-                      // PERBAIKAN 1: Ganti URL ke /auth/login/
-                      // PERBAIKAN 2: Gunakan 127.0.0.1 untuk stabilitas di Chrome
                       final response = await request
                           .login("http://127.0.0.1:8000/auth/login/", {
                         'username': username,

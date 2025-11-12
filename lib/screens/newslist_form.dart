@@ -17,9 +17,9 @@ class _NewsFormPageState extends State<NewsFormPage> {
     final _formKey = GlobalKey<FormState>();
     String _title = "";
     String _content = "";
-    String _category = "update"; // default
+    String _category = "update";
     String _thumbnail = "";
-    bool _isFeatured = false; // default
+    bool _isFeatured = false;
 
     final List<String> _categories = [
       'transfer',
@@ -30,12 +30,11 @@ class _NewsFormPageState extends State<NewsFormPage> {
       'analysis',
     ];
 
-    // URL untuk POST data ke Django (gunakan 10.0.2.2:8000 untuk Android Emulator)
     final String postUrl = "http://localhost:8000/create-flutter/";
 
     @override
     Widget build(BuildContext context) {
-        final request = context.watch<CookieRequest>(); // Mengambil instance CookieRequest
+        final request = context.watch<CookieRequest>();
 
         return Scaffold(
           appBar: AppBar(
@@ -54,8 +53,6 @@ class _NewsFormPageState extends State<NewsFormPage> {
               },
             ),
           ),
-          // Jika Anda menggunakan LeftDrawer, pastikan import di atas aktif
-          // drawer: const LeftDrawer(),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -152,7 +149,6 @@ class _NewsFormPageState extends State<NewsFormPage> {
                       ),
                       onChanged: (String? value) {
                         setState(() {
-                          // Pastikan value tidak null jika ingin menyimpan URL
                           _thumbnail = value ?? '';
                         });
                       },
@@ -173,7 +169,7 @@ class _NewsFormPageState extends State<NewsFormPage> {
                     ),
                   ),
 
-                  // === Tombol Simpan (Diperbarui untuk POST ke Django) ===
+                  // === Tombol Simpan  ===
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -186,9 +182,9 @@ class _NewsFormPageState extends State<NewsFormPage> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
 
-                            // Logika POST data ke Django
+                            // POST data ke Django
                             final response = await request.postJson(
-                              postUrl, // URL sudah didefinisikan di atas
+                              postUrl,
                               jsonEncode({
                                 "title": _title,
                                 "content": _content,
@@ -204,7 +200,6 @@ class _NewsFormPageState extends State<NewsFormPage> {
                                     .showSnackBar(const SnackBar(
                                   content: Text("News successfully saved!"),
                                 ));
-                                // Kembali ke halaman menu utama setelah sukses
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

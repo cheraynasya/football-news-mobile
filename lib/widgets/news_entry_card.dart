@@ -11,11 +11,8 @@ class NewsEntryCard extends StatelessWidget {
     required this.onTap,
   });
 
-  // Fungsi utilitas untuk mendapatkan widget thumbnail
   Widget _buildThumbnail() {
-    // 1. Cek jika thumbnail null atau kosong.
     if (news.thumbnail == null || news.thumbnail!.isEmpty) {
-      // Tampilkan placeholder jika tidak ada gambar
       return Container(
         height: 150,
         width: double.infinity,
@@ -35,8 +32,6 @@ class NewsEntryCard extends StatelessWidget {
       );
     }
 
-    // 2. Jika thumbnail ada, gunakan Image.network.
-    // Gunakan '127.0.0.1' untuk Chrome dan tambahkan '!'
     final String safeUrl = 'http://127.0.0.1:8000/proxy-image/?url=${Uri.encodeComponent(news.thumbnail!)}';
 
     return ClipRRect(

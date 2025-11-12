@@ -115,8 +115,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       String password1 = _passwordController.text;
                       String password2 = _confirmPasswordController.text;
 
-                      // Check credentials
-                      // Menggunakan 127.0.0.1 agar lebih stabil di Chrome
                       final response = await request.postJson(
                           "http://127.0.0.1:8000/auth/register/",
                           jsonEncode({
