@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:football_news/screens/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:football_news/widgets/left_drawer.dart';
 
@@ -26,8 +30,13 @@ class _NewsFormPageState extends State<NewsFormPage> {
       'analysis',
     ];
 
+    // URL untuk POST data ke Django (gunakan 10.0.2.2:8000 untuk Android Emulator)
+    final String postUrl = "http://localhost:8000/create-flutter/";
+
     @override
     Widget build(BuildContext context) {
+        final request = context.watch<CookieRequest>(); // Mengambil instance CookieRequest
+
         return Scaffold(
           appBar: AppBar(
             title: const Center(
@@ -45,8 +54,8 @@ class _NewsFormPageState extends State<NewsFormPage> {
               },
             ),
           ),
-          // Tambahkan drawer
-          drawer: const LeftDrawer(),
+          // Jika Anda menggunakan LeftDrawer, pastikan import di atas aktif
+          // drawer: const LeftDrawer(),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -143,7 +152,8 @@ class _NewsFormPageState extends State<NewsFormPage> {
                       ),
                       onChanged: (String? value) {
                         setState(() {
-                          _thumbnail = value!;
+                          // Pastikan value tidak null jika ingin menyimpan URL
+                          _thumbnail = value ?? '';
                         });
                       },
                     ),
@@ -163,7 +173,7 @@ class _NewsFormPageState extends State<NewsFormPage> {
                     ),
                   ),
 
-                  // === Tombol Simpan ===
+                  // === Tombol Simpan (Diperbarui untuk POST ke Django) ===
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -173,40 +183,40 @@ class _NewsFormPageState extends State<NewsFormPage> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.indigo),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Berita berhasil disimpan!'),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Judul: $_title'),
-                                        // Memunculkan value-value lainnya
-                                        Text('Isi: $_content'),
-                                        Text('Kategori: $_category'),
-                                        Text('Thumbnail: $_thumbnail'),
-                                        Text(
-                                            'Unggulan: ${_isFeatured ? "Ya" : "Tidak"}'),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text('OK'),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        _formKey.currentState!.reset();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
+
+                            // Logika POST data ke Django
+                            final response = await request.postJson(
+                              postUrl, // URL sudah didefinisikan di atas
+                              jsonEncode({
+                                "title": _title,
+                                "content": _content,
+                                "thumbnail": _thumbnail,
+                                "category": _category,
+                                "is_featured": _isFeatured,
+                              }),
                             );
+
+                            if (context.mounted) {
+                              if (response['status'] == 'success') {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("News successfully saved!"),
+                                ));
+                                // Kembali ke halaman menu utama setelah sukses
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("Something went wrong, please try again."),
+                                ));
+                              }
+                            }
                           }
                         },
                         child: const Text(
